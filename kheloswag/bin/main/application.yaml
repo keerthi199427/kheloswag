@@ -1,0 +1,10 @@
+server:
+  port:
+  servlet:
+    context-path: /playindia
+spring:
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/khelo_india_dev
+    username: root
+    password: password

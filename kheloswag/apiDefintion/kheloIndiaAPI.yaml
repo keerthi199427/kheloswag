@@ -1,0 +1,75 @@
+swagger: '2.0'
+info:
+  description: >-
+    Khelo India App
+  version: 1.0.0
+  title: Swagger Khelo India
+  termsOfService: 'http://swagger.io/terms/'
+  contact:
+    email: professional.keerthi@gmail.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+host: petstore.swagger.io
+basePath: /kheloindia
+paths:
+  /v1/states:
+    get:
+      tags:
+        - state list
+      summary: List of states in india
+      description: ''
+      operationId: getStatesList
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/States'
+        '500':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/StateError'
+definitions:
+  States:
+    properties:
+      statesList:
+        type: array
+        items:
+          $ref: '#/definitions/State'
+  State:
+    type: object
+    properties:
+      stateId:
+        type: integer
+        required: true
+        descrption: 'State ID'
+        example: 1
+      stateName:
+        type: string
+        required: true
+        descrption: 'State Name'
+        example: 'Orissa'
+      creationTime:
+        type: string
+        descrption: 'State Name'
+        example: 'Orissa'
+      modificationTime:
+        type: string
+        descrption: 'State Name'
+        example: 'Orissa'
+  StateError:
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/definitions/ApplicationError'
+  ApplicationError:
+    properties:
+      code:
+        type: string
+      message:
+        type: string
+      field:
+        type: string
