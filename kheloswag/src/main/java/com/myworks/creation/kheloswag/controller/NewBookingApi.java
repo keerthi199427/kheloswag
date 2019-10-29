@@ -5,8 +5,9 @@
  */
 package com.myworks.creation.kheloswag.controller;
 
-import com.myworks.creation.kheloswag.model.StateError;
-import com.myworks.creation.kheloswag.model.States;
+import com.myworks.creation.kheloswag.model.BookingError;
+import com.myworks.creation.kheloswag.model.NewBookingRequest;
+import com.myworks.creation.kheloswag.model.NewBookingResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
@@ -30,10 +31,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-@Api(value = "StateList", description = "the StateList API")
-public interface StateListApi {
+@Api(value = "NewBooking", description = "the NewBooking API")
+public interface NewBookingApi {
 
-    Logger log = LoggerFactory.getLogger(StateListApi.class);
+    Logger log = LoggerFactory.getLogger(NewBookingApi.class);
 
     default Optional<ObjectMapper> getObjectMapper() {
         return Optional.empty();
@@ -47,30 +48,33 @@ public interface StateListApi {
         return getRequest().map(r -> r.getHeader("Accept"));
     }
 
-    @ApiOperation(value = "List of states in india", nickname = "getStatesList", notes = "", response = States.class, tags={ "state list", })
+    @ApiOperation(value = "Booking a new Ground", nickname = "createBooking", notes = "", response = NewBookingResponse.class, tags={ "New Booking", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "successful operation", response = States.class),
-        @ApiResponse(code = 500, message = "successful operation", response = StateError.class) })
-    @RequestMapping(value = "/v1/states",
+        @ApiResponse(code = 201, message = "Created", response = NewBookingResponse.class),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 401, message = "Un Authorized"),
+        @ApiResponse(code = 500, message = "Internal Server Error", response = BookingError.class) })
+    @RequestMapping(value = "/v1/bookings",
         produces = { "application/json" }, 
-        method = RequestMethod.GET)
-    default ResponseEntity<States> _getStatesList() {
-        return getStatesList();
+        consumes = { "application/json" },
+        method = RequestMethod.POST)
+    default ResponseEntity<NewBookingResponse> _createBooking(@ApiParam(value = "create a new booking and return the details" ,required=true )  @Valid @RequestBody NewBookingRequest newBookingRequest) {
+        return createBooking(newBookingRequest);
     }
 
     // Override this method
-    default ResponseEntity<States> getStatesList() {
+    default ResponseEntity<NewBookingResponse> createBooking(NewBookingRequest newBookingRequest) {
         if(getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
             if (getAcceptHeader().get().contains("application/json")) {
                 try {
-                    return new ResponseEntity<>(getObjectMapper().get().readValue("{  \"statesList\" : [ {    \"creationTime\" : \"Orissa\",    \"stateName\" : \"Orissa\",    \"modificationTime\" : \"Orissa\",    \"stateId\" : 1  }, {    \"creationTime\" : \"Orissa\",    \"stateName\" : \"Orissa\",    \"modificationTime\" : \"Orissa\",    \"stateId\" : 1  } ]}", States.class), HttpStatus.NOT_IMPLEMENTED);
+                    return new ResponseEntity<>(getObjectMapper().get().readValue("{  \"gameId\" : \"1\",  \"districtName\" : \"Chandigarh\",  \"gameName\" : \"Volley ball\",  \"stateName\" : \"Punjab\",  \"gameStartTime\" : \"2019-10-11\",  \"gameEndTime\" : \"2019-10-11\",  \"userId\" : \"123\",  \"bookingId\" : \"123\",  \"groundName\" : \"ZPH - Villur\"}", NewBookingResponse.class), HttpStatus.NOT_IMPLEMENTED);
                 } catch (IOException e) {
                     log.error("Couldn't serialize response for content type application/json", e);
                     return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
                 }
             }
         } else {
-            log.warn("ObjectMapper or HttpServletRequest not configured in default StateListApi interface so no example is generated");
+            log.warn("ObjectMapper or HttpServletRequest not configured in default NewBookingApi interface so no example is generated");
         }
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }

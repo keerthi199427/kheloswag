@@ -5,8 +5,9 @@
  */
 package com.myworks.creation.kheloswag.controller;
 
-import com.myworks.creation.kheloswag.model.StateError;
-import com.myworks.creation.kheloswag.model.States;
+import com.myworks.creation.kheloswag.model.User;
+import com.myworks.creation.kheloswag.model.UserError;
+import com.myworks.creation.kheloswag.model.UserRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
@@ -30,10 +31,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-@Api(value = "StateList", description = "the StateList API")
-public interface StateListApi {
+@Api(value = "Users", description = "the Users API")
+public interface UsersApi {
 
-    Logger log = LoggerFactory.getLogger(StateListApi.class);
+    Logger log = LoggerFactory.getLogger(UsersApi.class);
 
     default Optional<ObjectMapper> getObjectMapper() {
         return Optional.empty();
@@ -47,30 +48,33 @@ public interface StateListApi {
         return getRequest().map(r -> r.getHeader("Accept"));
     }
 
-    @ApiOperation(value = "List of states in india", nickname = "getStatesList", notes = "", response = States.class, tags={ "state list", })
+    @ApiOperation(value = "Users Details", nickname = "createUser", notes = "", response = User.class, tags={ "Users", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "successful operation", response = States.class),
-        @ApiResponse(code = 500, message = "successful operation", response = StateError.class) })
-    @RequestMapping(value = "/v1/states",
+        @ApiResponse(code = 201, message = "Created", response = User.class),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 401, message = "Un Authorized"),
+        @ApiResponse(code = 500, message = "Internal Server Error", response = UserError.class) })
+    @RequestMapping(value = "/v1/users",
         produces = { "application/json" }, 
-        method = RequestMethod.GET)
-    default ResponseEntity<States> _getStatesList() {
-        return getStatesList();
+        consumes = { "application/json" },
+        method = RequestMethod.POST)
+    default ResponseEntity<User> _createUser(@ApiParam(value = "create a user and return the user" ,required=true )  @Valid @RequestBody UserRequest userRequest) {
+        return createUser(userRequest);
     }
 
     // Override this method
-    default ResponseEntity<States> getStatesList() {
+    default ResponseEntity<User> createUser(UserRequest userRequest) {
         if(getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
             if (getAcceptHeader().get().contains("application/json")) {
                 try {
-                    return new ResponseEntity<>(getObjectMapper().get().readValue("{  \"statesList\" : [ {    \"creationTime\" : \"Orissa\",    \"stateName\" : \"Orissa\",    \"modificationTime\" : \"Orissa\",    \"stateId\" : 1  }, {    \"creationTime\" : \"Orissa\",    \"stateName\" : \"Orissa\",    \"modificationTime\" : \"Orissa\",    \"stateId\" : 1  } ]}", States.class), HttpStatus.NOT_IMPLEMENTED);
+                    return new ResponseEntity<>(getObjectMapper().get().readValue("{  \"userModificationTime\" : \"2019-10-11\",  \"userState\" : \"Madhya Pradesh\",  \"userMobile\" : \"9463131136\",  \"userGender\" : \"Male\",  \"userEmail\" : \"ajlahlsdnal@gmail.com\",  \"userName\" : \"keerthi\",  \"userId\" : \"1234\",  \"userAge\" : \"34\",  \"userCreationTime\" : \"2019-10-11\"}", User.class), HttpStatus.NOT_IMPLEMENTED);
                 } catch (IOException e) {
                     log.error("Couldn't serialize response for content type application/json", e);
                     return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
                 }
             }
         } else {
-            log.warn("ObjectMapper or HttpServletRequest not configured in default StateListApi interface so no example is generated");
+            log.warn("ObjectMapper or HttpServletRequest not configured in default UsersApi interface so no example is generated");
         }
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }

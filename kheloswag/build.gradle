@@ -45,3 +45,26 @@ import io.swagger.codegen.DefaultGenerator
 def swaggerInput = "${project.projectDir}/apiDefintion/kheloIndiaAPI.yaml"
 def swaggerOutputDir = 'src/main/java'
 
+
+task generateAPI {
+
+	inputs.file(swaggerInput)
+	outputs.dir(swaggerOutputDir)
+	doLast {
+		def config = new CodegenConfigurator()
+		config.setInputSpec(swaggerInput)
+		config.setOutputDir(project.projectDir.toString())
+		config.setLang('spring')
+		config.setAdditionalProperties ([
+				'invokerPackage': 'com.myworks.creation.kheloswag',
+				'modelPackage': 'com.myworks.creation.kheloswag.model',
+				'apiPackage': 'com.myworks.creation.kheloswag.controller',
+				'dateLibrary': 'java8',
+				'useTags': 'true',
+				'interfaceOnly': 'true',
+				'useBeanValidation' : 'true',
+				'delegatePattern': 'true',
+				'hideGenerationTimestamp' :'true'])
+		new DefaultGenerator().opts(config.toClientOptInput()).generate()
+	}
+}

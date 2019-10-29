@@ -13,6 +13,37 @@ info:
 host: petstore.swagger.io
 basePath: /kheloindia
 paths:
+  /v1/users:
+    post:
+      tags:
+        - Users
+      summary: 'Users Details'
+      description: ''
+      operationId: createUser
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - name: "UserRequest"
+          in: body
+          description: "create a user and return the user"
+          required: true
+          schema:
+            $ref: '#/defintions/UserRequest'
+      responses:
+        '201':
+          description: 'Created'
+          schema:
+            $ref: '#/definitions/User'
+        '400':
+          description: 'Bad Request'
+        '401':
+          description: 'Un Authorized'
+        '500':
+          description: 'Internal Server Error'
+          schema:
+            $ref: '#/definitions/UserError'
   /v1/states:
     get:
       tags:
@@ -31,6 +62,84 @@ paths:
           description: successful operation
           schema:
             $ref: '#/definitions/StateError'
+  /v1/districts/{stateId}:
+    get:
+      tags:
+        - District list
+      summary: List of districts in particular state
+      description: ''
+      operationId: getDistrictLists
+      produces:
+        - application/json
+      parameters:
+        - name: "stateId"
+          in: "path"
+          description: "ID of state to return districts"
+          required: true
+          type: "integer"
+          format: "int64"
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Districts'
+        '500':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/DistrictError'
+  /v1/bookings:
+    post:
+      tags:
+        - New Booking
+      summary: 'Booking a new Ground'
+      operationId: createBooking
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - name: "NewBookingRequest"
+          in: body
+          description: "create a new booking and return the details"
+          required: true
+          schema:
+            $ref: '#/defintions/NewBookingRequest'
+      responses:
+        '201':
+          description: 'Created'
+          schema:
+            $ref: '#/definitions/NewBookingResponse'
+        '400':
+          description: 'Bad Request'
+        '401':
+          description: 'Un Authorized'
+        '500':
+          description: 'Internal Server Error'
+          schema:
+            $ref: '#/definitions/BookingError'
+  /v1/bookings/{userId}:
+    get:
+      tags:
+        - My Booking lists
+      summary: List of Bookings for particular User
+      operationId: getBookingListForUserId
+      produces:
+        - application/json
+      parameters:
+        - name: "userId"
+          in: "path"
+          description: "ID of User to return list of bookings"
+          required: true
+          type: "string"
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/NewBookingList'
+        '500':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/BookingError'
 definitions:
   States:
     properties:
@@ -65,6 +174,179 @@ definitions:
           type: array
           items:
             $ref: '#/definitions/ApplicationError'
+  NewBookingList:
+    properties:
+      bookingsList:
+        type: array
+        items:
+          $ref: '#/definitions/NewBookingResponse'
+  Districts:
+    properties:
+      districtsList:
+        type: array
+        items:
+          $ref: '#/definitions/District'
+  District:
+    type: object
+    properties:
+      districtId:
+        type: integer
+        required: true
+        descrption: 'District ID'
+        example: 1
+      stateId:
+        type: integer
+        required: true
+        descrption: 'State ID'
+        example: 1
+      districtName:
+        type: string
+        descrption: 'District Name'
+        example: 'Vizag'
+      creationTime:
+        type: string
+        descrption: 'Creation Time'
+        example: '2019-10-11'
+      modificationTime:
+        type: string
+        descrption: 'Update Time'
+        example: '2019-10-11'
+  DistrictError:
+    properties:
+      errors:
+        type: array
+        items:
+          $ref: '#/definitions/ApplicationError'
+  UserRequest:
+    properties:
+      userName:
+        type: string
+        example: 'keerthi'
+      userAge:
+        type: string
+        example: '34'
+      userGender:
+        type: string
+        example: 'Male'
+      userMobile:
+        type: string
+        example: '9463131136'
+      userEmail:
+        type: string
+        example: 'ajlahlsdnal@gmail.com'
+      userState:
+        type: string
+        example: 'Madhya Pradesh'
+      userCreationTime:
+        type: string
+        descrption: 'Creation Time'
+        example: '2019-10-11'
+      userModificationTime:
+        type: string
+        descrption: 'Update Time'
+        example: '2019-10-11'
+  User:
+    properties:
+      userId:
+        type: string
+        example: '1234'
+      userName:
+        type: string
+        example: 'keerthi'
+      userAge:
+        type: string
+        example: '34'
+      userGender:
+        type: string
+        example: 'Male'
+      userMobile:
+        type: string
+        example: '9463131136'
+      userEmail:
+        type: string
+        example: 'ajlahlsdnal@gmail.com'
+      userState:
+        type: string
+        example: 'Madhya Pradesh'
+      userCreationTime:
+        type: string
+        descrption: 'Creation Time'
+        example: '2019-10-11'
+      userModificationTime:
+        type: string
+        descrption: 'Update Time'
+        example: '2019-10-11'
+  UserError:
+    properties:
+      errors:
+        type: array
+        items:
+          $ref: '#/definitions/ApplicationError'
+  NewBookingRequest:
+    properties:
+      userId:
+        type: string
+        example: '123'
+      stateName:
+        type: string
+        example: 'Punjab'
+      districtName:
+        type: string
+        example: 'Chandigarh'
+      groundName:
+        type: string
+        example: 'ZPH - Villur'
+      gameId:
+        type: string
+        example: '1'
+      gameName:
+        type: string
+        example: 'Volley ball'
+      gameStartTime:
+        type: string
+        descrption: 'Game Start TimeStamp'
+        example: '2019-10-11'
+      gameEndTime:
+        type: string
+        descrption: 'Game End TimeStamp'
+        example: '2019-10-11'
+  NewBookingResponse:
+    properties:
+      bookingId:
+        type: string
+        example: '123'
+      userId:
+        type: string
+        example: '123'
+      stateName:
+        type: string
+        example: 'Punjab'
+      districtName:
+        type: string
+        example: 'Chandigarh'
+      groundName:
+        type: string
+        example: 'ZPH - Villur'
+      gameId:
+        type: string
+        example: '1'
+      gameName:
+        type: string
+        example: 'Volley ball'
+      gameStartTime:
+        type: string
+        descrption: 'Game Start TimeStamp'
+        example: '2019-10-11'
+      gameEndTime:
+        type: string
+        descrption: 'Game End TimeStamp'
+        example: '2019-10-11'
+  BookingError:
+    properties:
+      errors:
+        type: array
+        items:
+          $ref: '#/definitions/ApplicationError'
   ApplicationError:
     properties:
       code:
