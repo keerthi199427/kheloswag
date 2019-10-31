@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
 @Controller
-public class UserApiController implements UsersApi {
+public class UserApiController implements UserApi {
     private StateListService stateListService;
 
     @Autowired

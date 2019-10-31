@@ -12,11 +12,20 @@ info:
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 host: petstore.swagger.io
 basePath: /kheloindia
+tags:
+- name: "location"
+  description: "Everything about available locations"
+- name: "user"
+  description: "Operations about user"
+- name: "booking"
+  description: "Operations about Bookings"
+- name: "grounds & games"
+  description: "Everything about available grounds & games"
 paths:
   /v1/users:
     post:
       tags:
-        - Users
+        - "user"
       summary: 'Users Details'
       description: ''
       operationId: createUser
@@ -47,7 +56,7 @@ paths:
   /v1/states:
     get:
       tags:
-        - state list
+        - "location"
       summary: List of states in india
       description: ''
       operationId: getStatesList
@@ -62,13 +71,31 @@ paths:
           description: successful operation
           schema:
             $ref: '#/definitions/StateError'
+  /v1/districts:
+    get:
+      tags:
+        - "location"
+      summary: List of districts in india
+      description: ''
+      operationId: getAllDistricts
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Districts'
+        '500':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/DistrictError'
   /v1/districts/{stateId}:
     get:
       tags:
-        - District list
+        - "location"
       summary: List of districts in particular state
       description: ''
-      operationId: getDistrictLists
+      operationId: getDistrictListsByStateId
       produces:
         - application/json
       parameters:
@@ -90,7 +117,7 @@ paths:
   /v1/bookings:
     post:
       tags:
-        - New Booking
+        - "booking"
       summary: 'Booking a new Ground'
       operationId: createBooking
       produces:
@@ -120,7 +147,7 @@ paths:
   /v1/bookings/{userId}:
     get:
       tags:
-        - My Booking lists
+        - "booking"
       summary: List of Bookings for particular User
       operationId: getBookingListForUserId
       produces:
@@ -140,6 +167,34 @@ paths:
           description: successful operation
           schema:
             $ref: '#/definitions/BookingError'
+  /v1/grounds/{groundState}/{groundDistrict}:
+    get:
+      tags:
+        - "grounds & games"
+      summary: List of grounds for particular State and District
+      operationId: getGroundsByStateNameAndDistrictName
+      produces:
+        - application/json
+      parameters:
+        - name: "groundState"
+          in: "path"
+          description: "Name of ground state to return list of grounds"
+          required: true
+          type: "string"
+        - name: "groundDistrict"
+          in: "path"
+          description: "Name of ground district to return list of grounds"
+          required: true
+          type: "string"
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Grounds'
+        '500':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/GroundError'
 definitions:
   States:
     properties:
@@ -342,6 +397,63 @@ definitions:
         descrption: 'Game End TimeStamp'
         example: '2019-10-11'
   BookingError:
+    properties:
+      errors:
+        type: array
+        items:
+          $ref: '#/definitions/ApplicationError'
+  Grounds:
+    properties:
+      groundsList:
+        type: array
+        items:
+          $ref: '#/definitions/Ground'
+  Ground:
+    type: object
+    properties:
+      groundId:
+        type: integer
+        required: true
+        descrption: 'ground Id'
+        example: 1
+      groundName:
+        type: string
+        required: true
+        descrption: 'ground Name'
+        example: "ZPH- Public grounds"
+      groundState:
+        type: string
+        required: true
+        descrption: 'ground State'
+        example: "Andhra Pradesh"
+      groundDistrict:
+        type: string
+        required: true
+        descrption: 'ground district'
+        example: "Visakha"
+      gameId:
+        type: integer
+        required: true
+        descrption: 'Game Id'
+        example: 1
+      gameName:
+        type: string
+        required: true
+        descrption: 'Game Name'
+        example: "Cricket"
+      groundCreationTime:
+        type: string
+        descrption: 'Creation Time'
+        example: '2019-10-11 10:25'
+      groundModificationTime:
+        type: string
+        descrption: 'Update Time'
+        example: '2019-10-11 10:25'
+      groundActive:
+        type: boolean
+        descrption: 'Flag for Grounds: Active/Not'
+        example: true
+  GroundError:
     properties:
       errors:
         type: array

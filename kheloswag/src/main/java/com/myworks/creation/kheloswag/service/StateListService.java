@@ -1,15 +1,9 @@
 package com.myworks.creation.kheloswag.service;
 
-import com.myworks.creation.kheloswag.dbmodel.DistrictListEntity;
-import com.myworks.creation.kheloswag.dbmodel.NewBookingEntity;
-import com.myworks.creation.kheloswag.dbmodel.StateListEntity;
-import com.myworks.creation.kheloswag.dbmodel.UserEntity;
+import com.myworks.creation.kheloswag.dbmodel.*;
 import com.myworks.creation.kheloswag.exception.DuplicateRecordException;
 import com.myworks.creation.kheloswag.model.*;
-import com.myworks.creation.kheloswag.repo.DistrictListRepository;
-import com.myworks.creation.kheloswag.repo.NewBookingRepo;
-import com.myworks.creation.kheloswag.repo.StateListRepository;
-import com.myworks.creation.kheloswag.repo.UserRepository;
+import com.myworks.creation.kheloswag.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -28,13 +22,15 @@ public class StateListService {
     private final DistrictListRepository districtListRepository;
     private final UserRepository userRepository;
     private final NewBookingRepo newBookingRepo;
+    private final GroundGameRepostitory groundGameRepostitory;
 
     @Autowired
-    public StateListService(StateListRepository stateListRepository, DistrictListRepository districtListRepository, UserRepository userRepository, NewBookingRepo newBookingRepo) {
+    public StateListService(StateListRepository stateListRepository, DistrictListRepository districtListRepository, UserRepository userRepository, NewBookingRepo newBookingRepo, GroundGameRepostitory groundGameRepostitory) {
         this.stateListRepository = stateListRepository;
         this.districtListRepository = districtListRepository;
         this.userRepository = userRepository;
         this.newBookingRepo = newBookingRepo;
+        this.groundGameRepostitory = groundGameRepostitory;
     }
 
     public States getStateList() {
@@ -209,4 +205,31 @@ public class StateListService {
         return newBookingResponse;
     }
 
+    public Grounds getGroundsByStateNameAndDistrictName(String groundState, String groundDistrict) {
+        Grounds grounds = new Grounds();
+        List<GroundEntity> groundEntityList = groundGameRepostitory.findAllByGroundStateAndGroundDistrict(groundState,groundDistrict);
+        if(!CollectionUtils.isEmpty(groundEntityList)) {
+            List<Ground> groundsList = groundEntityList.stream().map(StateListService::buildGround).collect(Collectors.toList());
+            grounds.setGroundsList(groundsList);
+        }
+        return grounds;
+    }
+
+    private static Ground buildGround(GroundEntity groundEntity) {
+        Ground ground = new Ground();
+        ground.setGameId(groundEntity.getGameId().intValue());
+        ground.setGameName(groundEntity.getGameName());
+        ground.setGroundDistrict(groundEntity.getGroundDistrict());
+        ground.setGroundId(groundEntity.getGroundId().intValue());
+        ground.setGroundName(groundEntity.getGroundName());
+        ground.setGroundState(groundEntity.getGroundState());
+        ground.setGroundActive(groundEntity.isGroundActive());
+
+        ZonedDateTime creationTime = groundEntity.getGroundCreationTime();
+        ZonedDateTime modificationTime = groundEntity.getGroundModificationTime();
+
+        ground.setGroundCreationTime(creationTime.toLocalDateTime().atZone(ZoneId.of("UTC")).toString());
+        ground.setGroundModificationTime(modificationTime.toLocalDateTime().atZone(ZoneId.of("UTC")).toString());
+        return ground;
+    }
 }
