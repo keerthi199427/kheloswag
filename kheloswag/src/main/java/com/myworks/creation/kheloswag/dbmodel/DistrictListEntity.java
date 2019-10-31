@@ -23,8 +23,8 @@ public class DistrictListEntity {
     @Column(name = "district_id")
     private Long districtId;
 
-    @Column(name = "state_id")
-    private Long stateId;
+    @Column(name = "state_name")
+    private String stateName;
 
     @Column(name = "district_name")
     private String districtName;
@@ -43,12 +43,12 @@ public class DistrictListEntity {
         this.districtId = districtId;
     }
 
-    public Long getStateId() {
-        return stateId;
+    public String getStateName() {
+        return stateName;
     }
 
-    public void setStateId(Long stateId) {
-        this.stateId = stateId;
+    public void setStateName(String stateId) {
+        this.stateName = stateId;
     }
 
     public String getDistrictName() {

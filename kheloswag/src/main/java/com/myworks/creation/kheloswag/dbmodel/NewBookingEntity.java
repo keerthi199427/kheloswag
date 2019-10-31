@@ -33,14 +33,11 @@ public class NewBookingEntity {
     @Column(name = "ground_name")
     private String groundName;
 
-    @Column(name = "gameId")
-    private String gameId;
-
     @Column(name = "game_name")
     private String gameName;
 
     @Column(name = "booking_date", nullable = false)
-    private Date gameBookingDate;
+    private String gameBookingDate;
 
     @Column(name = "game_start_ts", nullable = false)
     private String gameStartTime;
@@ -48,11 +45,11 @@ public class NewBookingEntity {
     @Column(name = "game_end_ts" , nullable = false)
     private String gameEndTime;
 
-    public Date getGameBookingDate() {
+    public String getGameBookingDate() {
         return gameBookingDate;
     }
 
-    public void setGameBookingDate(Date gameBookingDate) {
+    public void setGameBookingDate(String gameBookingDate) {
         this.gameBookingDate = gameBookingDate;
     }
 
@@ -107,14 +104,6 @@ public class NewBookingEntity {
 
     public void setGroundName(String groundName) {
         this.groundName = groundName;
-    }
-
-    public String getGameId() {
-        return gameId;
-    }
-
-    public void setGameId(String gameId) {
-        this.gameId = gameId;
     }
 
     public String getGameName() {

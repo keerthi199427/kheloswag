@@ -18,8 +18,8 @@ public class District   {
   @JsonProperty("districtId")
   private Integer districtId = null;
 
-  @JsonProperty("stateId")
-  private Integer stateId = null;
+  @JsonProperty("stateName")
+  private String stateName = null;
 
   @JsonProperty("districtName")
   private String districtName = null;
@@ -50,24 +50,24 @@ public class District   {
     this.districtId = districtId;
   }
 
-  public District stateId(Integer stateId) {
-    this.stateId = stateId;
+  public District stateName(String stateName) {
+    this.stateName = stateName;
     return this;
   }
 
   /**
-   * Get stateId
-   * @return stateId
+   * Get stateName
+   * @return stateName
   **/
-  @ApiModelProperty(example = "1", value = "")
+  @ApiModelProperty(example = "Andhra", value = "")
 
 
-  public Integer getStateId() {
-    return stateId;
+  public String getStateName() {
+    return stateName;
   }
 
-  public void setStateId(Integer stateId) {
-    this.stateId = stateId;
+  public void setStateName(String stateName) {
+    this.stateName = stateName;
   }
 
   public District districtName(String districtName) {
@@ -141,7 +141,7 @@ public class District   {
     }
     District district = (District) o;
     return Objects.equals(this.districtId, district.districtId) &&
-        Objects.equals(this.stateId, district.stateId) &&
+        Objects.equals(this.stateName, district.stateName) &&
         Objects.equals(this.districtName, district.districtName) &&
         Objects.equals(this.creationTime, district.creationTime) &&
         Objects.equals(this.modificationTime, district.modificationTime);
@@ -149,7 +149,7 @@ public class District   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(districtId, stateId, districtName, creationTime, modificationTime);
+    return Objects.hash(districtId, stateName, districtName, creationTime, modificationTime);
   }
 
   @Override
@@ -158,7 +158,7 @@ public class District   {
     sb.append("class District {\n");
     
     sb.append("    districtId: ").append(toIndentedString(districtId)).append("\n");
-    sb.append("    stateId: ").append(toIndentedString(stateId)).append("\n");
+    sb.append("    stateName: ").append(toIndentedString(stateName)).append("\n");
     sb.append("    districtName: ").append(toIndentedString(districtName)).append("\n");
     sb.append("    creationTime: ").append(toIndentedString(creationTime)).append("\n");
     sb.append("    modificationTime: ").append(toIndentedString(modificationTime)).append("\n");

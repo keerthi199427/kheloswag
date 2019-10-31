@@ -52,7 +52,7 @@ paths:
         '500':
           description: 'Internal Server Error'
           schema:
-            $ref: '#/definitions/UserError'
+            $ref: '#/definitions/KheloError'
   /v1/states:
     get:
       tags:
@@ -70,41 +70,21 @@ paths:
         '500':
           description: successful operation
           schema:
-            $ref: '#/definitions/StateError'
-  /v1/districts:
-    get:
-      tags:
-        - "location"
-      summary: List of districts in india
-      description: ''
-      operationId: getAllDistricts
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: successful operation
-          schema:
-            $ref: '#/definitions/Districts'
-        '500':
-          description: successful operation
-          schema:
-            $ref: '#/definitions/DistrictError'
-  /v1/districts/{stateId}:
+            $ref: '#/definitions/KheloError'
+  /v1/districts/{stateName}:
     get:
       tags:
         - "location"
       summary: List of districts in particular state
-      description: ''
-      operationId: getDistrictListsByStateId
+      operationId: getDistrictListsByStateName
       produces:
         - application/json
       parameters:
-        - name: "stateId"
+        - name: "stateName"
           in: "path"
           description: "ID of state to return districts"
           required: true
-          type: "integer"
-          format: "int64"
+          type: "string"
       responses:
         '200':
           description: successful operation
@@ -113,7 +93,7 @@ paths:
         '500':
           description: successful operation
           schema:
-            $ref: '#/definitions/DistrictError'
+            $ref: '#/definitions/KheloError'
   /v1/bookings:
     post:
       tags:
@@ -143,7 +123,7 @@ paths:
         '500':
           description: 'Internal Server Error'
           schema:
-            $ref: '#/definitions/BookingError'
+            $ref: '#/definitions/KheloError'
   /v1/bookings/{userId}:
     get:
       tags:
@@ -166,7 +146,7 @@ paths:
         '500':
           description: successful operation
           schema:
-            $ref: '#/definitions/BookingError'
+            $ref: '#/definitions/KheloError'
   /v1/grounds/{groundState}/{groundDistrict}/{gameName}:
     get:
       tags:
@@ -199,7 +179,7 @@ paths:
         '500':
           description: successful operation
           schema:
-            $ref: '#/definitions/GroundError'
+            $ref: '#/definitions/KheloError'
 definitions:
   States:
     properties:
@@ -228,12 +208,6 @@ definitions:
         type: string
         descrption: 'State Name'
         example: 'Orissa'
-  StateError:
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/definitions/ApplicationError'
   NewBookingList:
     properties:
       bookingsList:
@@ -254,11 +228,11 @@ definitions:
         required: true
         descrption: 'District ID'
         example: 1
-      stateId:
-        type: integer
+      stateName:
+        type: string
         required: true
-        descrption: 'State ID'
-        example: 1
+        descrption: 'State Name'
+        example: 'Andhra'
       districtName:
         type: string
         descrption: 'District Name'
@@ -271,12 +245,6 @@ definitions:
         type: string
         descrption: 'Update Time'
         example: '2019-10-11'
-  DistrictError:
-    properties:
-      errors:
-        type: array
-        items:
-          $ref: '#/definitions/ApplicationError'
   UserRequest:
     properties:
       userName:
@@ -336,12 +304,6 @@ definitions:
         type: string
         descrption: 'Update Time'
         example: '2019-10-11'
-  UserError:
-    properties:
-      errors:
-        type: array
-        items:
-          $ref: '#/definitions/ApplicationError'
   NewBookingRequest:
     properties:
       userId:
@@ -356,9 +318,6 @@ definitions:
       groundName:
         type: string
         example: 'ZPH - Villur'
-      gameId:
-        type: string
-        example: '1'
       gameName:
         type: string
         example: 'Volley ball'
@@ -395,9 +354,6 @@ definitions:
       groundName:
         type: string
         example: 'ZPH - Villur'
-      gameId:
-        type: string
-        example: '1'
       gameName:
         type: string
         example: 'Volley ball'
@@ -417,12 +373,6 @@ definitions:
         type: boolean
         description: 'Flag for Ground Booking Slot'
         example: true
-  BookingError:
-    properties:
-      errors:
-        type: array
-        items:
-          $ref: '#/definitions/ApplicationError'
   Grounds:
     properties:
       groundsList:
@@ -474,7 +424,7 @@ definitions:
         type: boolean
         descrption: 'Flag for Grounds: Active/Not'
         example: true
-  GroundError:
+  KheloError:
     properties:
       errors:
         type: array

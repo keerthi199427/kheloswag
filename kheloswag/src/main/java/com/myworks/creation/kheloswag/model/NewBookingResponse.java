@@ -30,9 +30,6 @@ public class NewBookingResponse   {
   @JsonProperty("groundName")
   private String groundName = null;
 
-  @JsonProperty("gameId")
-  private String gameId = null;
-
   @JsonProperty("gameName")
   private String gameName = null;
 
@@ -146,26 +143,6 @@ public class NewBookingResponse   {
 
   public void setGroundName(String groundName) {
     this.groundName = groundName;
-  }
-
-  public NewBookingResponse gameId(String gameId) {
-    this.gameId = gameId;
-    return this;
-  }
-
-  /**
-   * Get gameId
-   * @return gameId
-  **/
-  @ApiModelProperty(example = "1", value = "")
-
-
-  public String getGameId() {
-    return gameId;
-  }
-
-  public void setGameId(String gameId) {
-    this.gameId = gameId;
   }
 
   public NewBookingResponse gameName(String gameName) {
@@ -283,7 +260,6 @@ public class NewBookingResponse   {
         Objects.equals(this.stateName, newBookingResponse.stateName) &&
         Objects.equals(this.districtName, newBookingResponse.districtName) &&
         Objects.equals(this.groundName, newBookingResponse.groundName) &&
-        Objects.equals(this.gameId, newBookingResponse.gameId) &&
         Objects.equals(this.gameName, newBookingResponse.gameName) &&
         Objects.equals(this.gameBookingDate, newBookingResponse.gameBookingDate) &&
         Objects.equals(this.gameStartTime, newBookingResponse.gameStartTime) &&
@@ -293,7 +269,7 @@ public class NewBookingResponse   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(bookingId, userId, stateName, districtName, groundName, gameId, gameName, gameBookingDate, gameStartTime, gameEndTime, bookingActive);
+    return Objects.hash(bookingId, userId, stateName, districtName, groundName, gameName, gameBookingDate, gameStartTime, gameEndTime, bookingActive);
   }
 
   @Override
@@ -306,7 +282,6 @@ public class NewBookingResponse   {
     sb.append("    stateName: ").append(toIndentedString(stateName)).append("\n");
     sb.append("    districtName: ").append(toIndentedString(districtName)).append("\n");
     sb.append("    groundName: ").append(toIndentedString(groundName)).append("\n");
-    sb.append("    gameId: ").append(toIndentedString(gameId)).append("\n");
     sb.append("    gameName: ").append(toIndentedString(gameName)).append("\n");
     sb.append("    gameBookingDate: ").append(toIndentedString(gameBookingDate)).append("\n");
     sb.append("    gameStartTime: ").append(toIndentedString(gameStartTime)).append("\n");

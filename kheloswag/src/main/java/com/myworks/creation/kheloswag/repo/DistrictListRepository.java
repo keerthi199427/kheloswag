@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface DistrictListRepository extends JpaRepository<DistrictListEntity, Long> {
-    List<DistrictListEntity> findByStateId(Long id);
+    List<DistrictListEntity> findByStateName(String stateName);
 }

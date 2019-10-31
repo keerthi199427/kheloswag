@@ -5,7 +5,7 @@
  */
 package com.myworks.creation.kheloswag.controller;
 
-import com.myworks.creation.kheloswag.model.BookingError;
+import com.myworks.creation.kheloswag.model.KheloError;
 import com.myworks.creation.kheloswag.model.NewBookingList;
 import com.myworks.creation.kheloswag.model.NewBookingRequest;
 import com.myworks.creation.kheloswag.model.NewBookingResponse;
@@ -54,7 +54,7 @@ public interface BookingApi {
         @ApiResponse(code = 201, message = "Created", response = NewBookingResponse.class),
         @ApiResponse(code = 400, message = "Bad Request"),
         @ApiResponse(code = 401, message = "Un Authorized"),
-        @ApiResponse(code = 500, message = "Internal Server Error", response = BookingError.class) })
+        @ApiResponse(code = 500, message = "Internal Server Error", response = KheloError.class) })
     @RequestMapping(value = "/v1/bookings",
         produces = { "application/json" }, 
         consumes = { "application/json" },
@@ -68,7 +68,7 @@ public interface BookingApi {
         if(getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
             if (getAcceptHeader().get().contains("application/json")) {
                 try {
-                    return new ResponseEntity<>(getObjectMapper().get().readValue("{  \"gameId\" : \"1\",  \"districtName\" : \"Chandigarh\",  \"gameName\" : \"Volley ball\",  \"stateName\" : \"Punjab\",  \"gameStartTime\" : \"06:00, 10:00, 14:00, 18:00\",  \"gameEndTime\" : \"09:00, 13:00, 17:00, 21:00\",  \"bookingActive\" : true,  \"userId\" : \"123\",  \"gameBookingDate\" : \"2019-10-31\",  \"bookingId\" : \"123\",  \"groundName\" : \"ZPH - Villur\"}", NewBookingResponse.class), HttpStatus.NOT_IMPLEMENTED);
+                    return new ResponseEntity<>(getObjectMapper().get().readValue("{  \"districtName\" : \"Chandigarh\",  \"gameName\" : \"Volley ball\",  \"stateName\" : \"Punjab\",  \"gameStartTime\" : \"06:00, 10:00, 14:00, 18:00\",  \"gameEndTime\" : \"09:00, 13:00, 17:00, 21:00\",  \"bookingActive\" : true,  \"userId\" : \"123\",  \"gameBookingDate\" : \"2019-10-31\",  \"bookingId\" : \"123\",  \"groundName\" : \"ZPH - Villur\"}", NewBookingResponse.class), HttpStatus.NOT_IMPLEMENTED);
                 } catch (IOException e) {
                     log.error("Couldn't serialize response for content type application/json", e);
                     return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -84,7 +84,7 @@ public interface BookingApi {
     @ApiOperation(value = "List of Bookings for particular User", nickname = "getBookingListForUserId", notes = "", response = NewBookingList.class, tags={ "booking", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "successful operation", response = NewBookingList.class),
-        @ApiResponse(code = 500, message = "successful operation", response = BookingError.class) })
+        @ApiResponse(code = 500, message = "successful operation", response = KheloError.class) })
     @RequestMapping(value = "/v1/bookings/{userId}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
@@ -97,7 +97,7 @@ public interface BookingApi {
         if(getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
             if (getAcceptHeader().get().contains("application/json")) {
                 try {
-                    return new ResponseEntity<>(getObjectMapper().get().readValue("{  \"bookingsList\" : [ {    \"gameId\" : \"1\",    \"districtName\" : \"Chandigarh\",    \"gameName\" : \"Volley ball\",    \"stateName\" : \"Punjab\",    \"gameStartTime\" : \"06:00, 10:00, 14:00, 18:00\",    \"gameEndTime\" : \"09:00, 13:00, 17:00, 21:00\",    \"bookingActive\" : true,    \"userId\" : \"123\",    \"gameBookingDate\" : \"2019-10-31\",    \"bookingId\" : \"123\",    \"groundName\" : \"ZPH - Villur\"  }, {    \"gameId\" : \"1\",    \"districtName\" : \"Chandigarh\",    \"gameName\" : \"Volley ball\",    \"stateName\" : \"Punjab\",    \"gameStartTime\" : \"06:00, 10:00, 14:00, 18:00\",    \"gameEndTime\" : \"09:00, 13:00, 17:00, 21:00\",    \"bookingActive\" : true,    \"userId\" : \"123\",    \"gameBookingDate\" : \"2019-10-31\",    \"bookingId\" : \"123\",    \"groundName\" : \"ZPH - Villur\"  } ]}", NewBookingList.class), HttpStatus.NOT_IMPLEMENTED);
+                    return new ResponseEntity<>(getObjectMapper().get().readValue("{  \"bookingsList\" : [ {    \"districtName\" : \"Chandigarh\",    \"gameName\" : \"Volley ball\",    \"stateName\" : \"Punjab\",    \"gameStartTime\" : \"06:00, 10:00, 14:00, 18:00\",    \"gameEndTime\" : \"09:00, 13:00, 17:00, 21:00\",    \"bookingActive\" : true,    \"userId\" : \"123\",    \"gameBookingDate\" : \"2019-10-31\",    \"bookingId\" : \"123\",    \"groundName\" : \"ZPH - Villur\"  }, {    \"districtName\" : \"Chandigarh\",    \"gameName\" : \"Volley ball\",    \"stateName\" : \"Punjab\",    \"gameStartTime\" : \"06:00, 10:00, 14:00, 18:00\",    \"gameEndTime\" : \"09:00, 13:00, 17:00, 21:00\",    \"bookingActive\" : true,    \"userId\" : \"123\",    \"gameBookingDate\" : \"2019-10-31\",    \"bookingId\" : \"123\",    \"groundName\" : \"ZPH - Villur\"  } ]}", NewBookingList.class), HttpStatus.NOT_IMPLEMENTED);
                 } catch (IOException e) {
                     log.error("Couldn't serialize response for content type application/json", e);
                     return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

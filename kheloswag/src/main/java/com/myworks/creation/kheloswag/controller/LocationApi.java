@@ -5,9 +5,8 @@
  */
 package com.myworks.creation.kheloswag.controller;
 
-import com.myworks.creation.kheloswag.model.DistrictError;
 import com.myworks.creation.kheloswag.model.Districts;
-import com.myworks.creation.kheloswag.model.StateError;
+import com.myworks.creation.kheloswag.model.KheloError;
 import com.myworks.creation.kheloswag.model.States;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
@@ -49,52 +48,23 @@ public interface LocationApi {
         return getRequest().map(r -> r.getHeader("Accept"));
     }
 
-    @ApiOperation(value = "List of districts in india", nickname = "getAllDistricts", notes = "", response = Districts.class, tags={ "location", })
+    @ApiOperation(value = "List of districts in particular state", nickname = "getDistrictListsByStateName", notes = "", response = Districts.class, tags={ "location", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "successful operation", response = Districts.class),
-        @ApiResponse(code = 500, message = "successful operation", response = DistrictError.class) })
-    @RequestMapping(value = "/v1/districts",
+        @ApiResponse(code = 500, message = "successful operation", response = KheloError.class) })
+    @RequestMapping(value = "/v1/districts/{stateName}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    default ResponseEntity<Districts> _getAllDistricts() {
-        return getAllDistricts();
+    default ResponseEntity<Districts> _getDistrictListsByStateName(@ApiParam(value = "ID of state to return districts",required=true) @PathVariable("stateName") String stateName) {
+        return getDistrictListsByStateName(stateName);
     }
 
     // Override this method
-    default ResponseEntity<Districts> getAllDistricts() {
+    default ResponseEntity<Districts> getDistrictListsByStateName(String stateName) {
         if(getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
             if (getAcceptHeader().get().contains("application/json")) {
                 try {
-                    return new ResponseEntity<>(getObjectMapper().get().readValue("{  \"districtsList\" : [ {    \"districtId\" : 1,    \"districtName\" : \"Vizag\",    \"creationTime\" : \"2019-10-11\",    \"modificationTime\" : \"2019-10-11\",    \"stateId\" : 1  }, {    \"districtId\" : 1,    \"districtName\" : \"Vizag\",    \"creationTime\" : \"2019-10-11\",    \"modificationTime\" : \"2019-10-11\",    \"stateId\" : 1  } ]}", Districts.class), HttpStatus.NOT_IMPLEMENTED);
-                } catch (IOException e) {
-                    log.error("Couldn't serialize response for content type application/json", e);
-                    return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-                }
-            }
-        } else {
-            log.warn("ObjectMapper or HttpServletRequest not configured in default LocationApi interface so no example is generated");
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-    }
-
-
-    @ApiOperation(value = "List of districts in particular state", nickname = "getDistrictListsByStateId", notes = "", response = Districts.class, tags={ "location", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "successful operation", response = Districts.class),
-        @ApiResponse(code = 500, message = "successful operation", response = DistrictError.class) })
-    @RequestMapping(value = "/v1/districts/{stateId}",
-        produces = { "application/json" }, 
-        method = RequestMethod.GET)
-    default ResponseEntity<Districts> _getDistrictListsByStateId(@ApiParam(value = "ID of state to return districts",required=true) @PathVariable("stateId") Long stateId) {
-        return getDistrictListsByStateId(stateId);
-    }
-
-    // Override this method
-    default ResponseEntity<Districts> getDistrictListsByStateId(Long stateId) {
-        if(getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-            if (getAcceptHeader().get().contains("application/json")) {
-                try {
-                    return new ResponseEntity<>(getObjectMapper().get().readValue("{  \"districtsList\" : [ {    \"districtId\" : 1,    \"districtName\" : \"Vizag\",    \"creationTime\" : \"2019-10-11\",    \"modificationTime\" : \"2019-10-11\",    \"stateId\" : 1  }, {    \"districtId\" : 1,    \"districtName\" : \"Vizag\",    \"creationTime\" : \"2019-10-11\",    \"modificationTime\" : \"2019-10-11\",    \"stateId\" : 1  } ]}", Districts.class), HttpStatus.NOT_IMPLEMENTED);
+                    return new ResponseEntity<>(getObjectMapper().get().readValue("{  \"districtsList\" : [ {    \"districtId\" : 1,    \"districtName\" : \"Vizag\",    \"creationTime\" : \"2019-10-11\",    \"stateName\" : \"Andhra\",    \"modificationTime\" : \"2019-10-11\"  }, {    \"districtId\" : 1,    \"districtName\" : \"Vizag\",    \"creationTime\" : \"2019-10-11\",    \"stateName\" : \"Andhra\",    \"modificationTime\" : \"2019-10-11\"  } ]}", Districts.class), HttpStatus.NOT_IMPLEMENTED);
                 } catch (IOException e) {
                     log.error("Couldn't serialize response for content type application/json", e);
                     return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -110,7 +80,7 @@ public interface LocationApi {
     @ApiOperation(value = "List of states in india", nickname = "getStatesList", notes = "", response = States.class, tags={ "location", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "successful operation", response = States.class),
-        @ApiResponse(code = 500, message = "successful operation", response = StateError.class) })
+        @ApiResponse(code = 500, message = "successful operation", response = KheloError.class) })
     @RequestMapping(value = "/v1/states",
         produces = { "application/json" }, 
         method = RequestMethod.GET)

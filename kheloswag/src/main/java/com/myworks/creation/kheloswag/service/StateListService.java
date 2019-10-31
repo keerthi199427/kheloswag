@@ -2,8 +2,10 @@ package com.myworks.creation.kheloswag.service;
 
 import com.myworks.creation.kheloswag.dbmodel.*;
 import com.myworks.creation.kheloswag.exception.DuplicateRecordException;
+import com.myworks.creation.kheloswag.exception.NoRecordFoundException;
 import com.myworks.creation.kheloswag.model.*;
 import com.myworks.creation.kheloswag.repo.*;
+import com.myworks.creation.kheloswag.validations.VerifyParameters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -62,9 +64,13 @@ public class StateListService {
         return state;
     }
 
-    public Districts getDistrictListsByStateId(Long stateId) {
+    public Districts getDistrictListsByStateName(String stateName) {
         Districts districts = new Districts();
-        List<DistrictListEntity> districtListEntityList = districtListRepository.findByStateId(stateId);
+        List<DistrictListEntity> districtListEntityList = districtListRepository.findByStateName(stateName);
+        if(districtListEntityList.isEmpty()) {
+            NoRecordFoundException noRecordFoundException = new NoRecordFoundException("No given state name found");
+            throw noRecordFoundException;
+        }
         if(!CollectionUtils.isEmpty(districtListEntityList)) {
             List<District> districtsList = districtListEntityList.stream().map(StateListService::buildDistrict).collect(Collectors.toList());
             districts.setDistrictsList(districtsList);
@@ -75,14 +81,13 @@ public class StateListService {
     private static District buildDistrict(DistrictListEntity districtListEntity) {
         District district = new District();
         district.setDistrictId(districtListEntity.getDistrictId().intValue());
-        district.setStateId(districtListEntity.getStateId().intValue());
         district.setDistrictName(districtListEntity.getDistrictName());
-
+        district.setStateName(districtListEntity.getStateName());
         ZonedDateTime creationTime = districtListEntity.getCreationTime();
         ZonedDateTime modificationTime = districtListEntity.getModificationTime();
 
-        district.setCreationTime(creationTime.toLocalDateTime().atZone(ZoneId.of("IST")).toString());
-        district.setModificationTime(modificationTime.toLocalDateTime().atZone(ZoneId.of("IST")).toString());
+        district.setCreationTime(creationTime.toLocalDateTime().atZone(ZoneId.of("Asia/Kolkata")).toString());
+        district.setModificationTime(modificationTime.toLocalDateTime().atZone(ZoneId.of("Asia/Kolkata")).toString());
 
         return district;
     }
@@ -92,15 +97,6 @@ public class StateListService {
         verfiyParameters(userRequest);
         UserEntity userEntityResult = userRepository.save(userEntity);
         return constructUserResponse(userEntityResult);
-    }
-
-    private void verfiyParameters(UserRequest userRequest) {
-
-        Optional<UserEntity> userEntityOptional = userRepository.findAllByUserMobile(userRequest.getUserMobile());
-        if(userEntityOptional.isPresent()) {
-            DuplicateRecordException duplicateRecordException = new DuplicateRecordException("User mobile already exists");
-            throw duplicateRecordException;
-        }
     }
 
     public UserEntity constructUserEntity(UserRequest userRequest) {
@@ -137,6 +133,7 @@ public class StateListService {
     }
 
     public NewBookingResponse createBooking(NewBookingRequest newBookingRequest) {
+        verifyNewBookingParameters(newBookingRequest);
         NewBookingEntity newBookingEntity = constructNewBookingEntity(newBookingRequest);
         NewBookingEntity newBookingEntityResult = newBookingRepo.save(newBookingEntity);
         return constructNewBookingResponse(newBookingEntityResult);
@@ -147,12 +144,10 @@ public class StateListService {
         if(newBookingRequest !=null) {
             newBookingEntity.setUserId((newBookingRequest.getUserId()));
             newBookingEntity.setDistrictName(newBookingRequest.getDistrictName());
-            newBookingEntity.setGameId(newBookingRequest.getGameId());
             newBookingEntity.setGameName(newBookingRequest.getGameName());
             newBookingEntity.setGroundName(newBookingRequest.getGroundName());
             newBookingEntity.setStateName(newBookingRequest.getStateName());
-            newBookingEntity.setGameBookingDate(newBookingRequest.getGameBookingDate()!= null?
-                    getDateInIST(newBookingRequest.getGameBookingDate()): null);
+            newBookingEntity.setGameBookingDate(newBookingRequest.getGameBookingDate());
             newBookingEntity.setGameEndTime(newBookingRequest.getGameEndTime());
             newBookingEntity.setGameStartTime(newBookingRequest.getGameStartTime());
             newBookingEntity.setBookingActive(newBookingRequest.isBookingActive());
@@ -166,11 +161,10 @@ public class StateListService {
             newBookingResponse.setBookingId(newBookingEntity.getBookingId());
             newBookingResponse.setUserId((newBookingEntity.getUserId()));
             newBookingResponse.setDistrictName(newBookingEntity.getDistrictName());
-            newBookingResponse.setGameId(newBookingEntity.getGameId());
             newBookingResponse.setGameName(newBookingEntity.getGameName());
             newBookingResponse.setGroundName(newBookingEntity.getGroundName());
             newBookingResponse.setStateName(newBookingEntity.getStateName());
-            newBookingResponse.setGameBookingDate(newBookingEntity.getGameBookingDate()!= null? newBookingEntity.getGameBookingDate().toString(): "");
+            newBookingResponse.setGameBookingDate(newBookingEntity.getGameBookingDate()!= null? newBookingEntity.getGameBookingDate().toString(): " ");
             newBookingResponse.setGameEndTime(newBookingEntity.getGameEndTime() !=null ? newBookingEntity.getGameEndTime().toString(): " ");
             newBookingResponse.setGameStartTime(newBookingEntity.getGameStartTime() !=null ? newBookingEntity.getGameStartTime().toString(): " ");
             newBookingResponse.setBookingActive(newBookingEntity.isBookingActive());
@@ -181,7 +175,7 @@ public class StateListService {
     public ZonedDateTime getDateTimeInIST(String inDateTime) {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         LocalDateTime localDateTime = LocalDateTime.parse(inDateTime,dateTimeFormatter);
-        return localDateTime.atZone(ZoneId.of("IST"));
+        return localDateTime.atZone(ZoneId.of("Asia/Kolkata"));
     }
 
     public Date getDateInIST(String inDateTime) {
@@ -198,7 +192,7 @@ public class StateListService {
     public ZonedDateTime getTimeInIST(String inDateTime) {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm");
         LocalDateTime localDateTime = LocalDateTime.parse(inDateTime,dateTimeFormatter);
-        return localDateTime.atZone(ZoneId.of("IST"));
+        return localDateTime.atZone(ZoneId.of("Asia/Kolkata"));
     }
 
     public NewBookingList getBookingListForUserId(String userId) {
@@ -215,14 +209,12 @@ public class StateListService {
         NewBookingResponse newBookingResponse = new NewBookingResponse();
         newBookingResponse.setBookingId(newBookingEntity.getBookingId());
         newBookingResponse.setDistrictName(newBookingEntity.getDistrictName());
-        newBookingResponse.setGameId(newBookingEntity.getGameId());
         newBookingResponse.setGameName(newBookingEntity.getGameName());
         newBookingResponse.setGroundName(newBookingEntity.getGroundName());
         newBookingResponse.setStateName(newBookingEntity.getStateName());
         newBookingResponse.setUserId(newBookingEntity.getUserId());
-
-        //ZonedDateTime startTime = newBookingEntity.getGameStartTime();
-        //ZonedDateTime endTime = newBookingEntity.getGameEndTime();
+        newBookingResponse.setGameBookingDate(newBookingEntity.getGameBookingDate());
+        newBookingResponse.setBookingActive(newBookingEntity.isBookingActive());
 
         newBookingResponse.setGameStartTime(newBookingEntity.getGameStartTime());
         newBookingResponse.setGameEndTime(newBookingEntity.getGameEndTime());
@@ -253,8 +245,26 @@ public class StateListService {
         ZonedDateTime creationTime = groundEntity.getGroundCreationTime();
         ZonedDateTime modificationTime = groundEntity.getGroundModificationTime();
 
-        ground.setGroundCreationTime(creationTime.toLocalDateTime().atZone(ZoneId.of("IST")).toString());
-        ground.setGroundModificationTime(modificationTime.toLocalDateTime().atZone(ZoneId.of("IST")).toString());
+        ground.setGroundCreationTime(creationTime.toLocalDateTime().atZone(ZoneId.of("Asia/Kolkata")).toString());
+        ground.setGroundModificationTime(modificationTime.toLocalDateTime().atZone(ZoneId.of("Asia/Kolkata")).toString());
         return ground;
+    }
+
+    private void verifyNewBookingParameters(NewBookingRequest newBookingRequest) {
+        Optional<NewBookingEntity> newBookingEntityOptional = newBookingRepo.findNewBookingEntityByStateNameAndDistrictNameAndAndGroundNameAndGameNameAndGameStartTimeAndGameBookingDateAndBookingActive(
+                newBookingRequest.getStateName(),newBookingRequest.getDistrictName(),newBookingRequest.getGroundName(),newBookingRequest.getGameName(),newBookingRequest.getGameStartTime(),newBookingRequest.getGameBookingDate(),newBookingRequest.isBookingActive());
+        if(newBookingEntityOptional.isPresent()) {
+            DuplicateRecordException duplicateRecordException = new DuplicateRecordException("Requested Slot is already booked");
+            throw duplicateRecordException;
+        }
+    }
+
+    private void verfiyParameters(UserRequest userRequest) {
+
+        Optional<UserEntity> userEntityOptional = userRepository.findAllByUserMobile(userRequest.getUserMobile());
+        if(userEntityOptional.isPresent()) {
+            DuplicateRecordException duplicateRecordException = new DuplicateRecordException("User mobile already exists");
+            throw duplicateRecordException;
+        }
     }
 }

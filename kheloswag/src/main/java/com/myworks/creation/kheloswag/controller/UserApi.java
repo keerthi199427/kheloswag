@@ -5,8 +5,8 @@
  */
 package com.myworks.creation.kheloswag.controller;
 
+import com.myworks.creation.kheloswag.model.KheloError;
 import com.myworks.creation.kheloswag.model.User;
-import com.myworks.creation.kheloswag.model.UserError;
 import com.myworks.creation.kheloswag.model.UserRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
@@ -53,7 +53,7 @@ public interface UserApi {
         @ApiResponse(code = 201, message = "Created", response = User.class),
         @ApiResponse(code = 400, message = "Bad Request"),
         @ApiResponse(code = 401, message = "Un Authorized"),
-        @ApiResponse(code = 500, message = "Internal Server Error", response = UserError.class) })
+        @ApiResponse(code = 500, message = "Internal Server Error", response = KheloError.class) })
     @RequestMapping(value = "/v1/users",
         produces = { "application/json" }, 
         consumes = { "application/json" },

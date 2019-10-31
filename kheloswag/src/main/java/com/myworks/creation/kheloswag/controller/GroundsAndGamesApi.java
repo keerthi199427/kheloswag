@@ -5,8 +5,8 @@
  */
 package com.myworks.creation.kheloswag.controller;
 
-import com.myworks.creation.kheloswag.model.GroundError;
 import com.myworks.creation.kheloswag.model.Grounds;
+import com.myworks.creation.kheloswag.model.KheloError;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
@@ -50,7 +50,7 @@ public interface GroundsAndGamesApi {
     @ApiOperation(value = "List of grounds for particular State, District and Game", nickname = "getGroundsByStateNameAndDistrictNameAndGameName", notes = "", response = Grounds.class, tags={ "grounds and games", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "successful operation", response = Grounds.class),
-        @ApiResponse(code = 500, message = "successful operation", response = GroundError.class) })
+        @ApiResponse(code = 500, message = "successful operation", response = KheloError.class) })
     @RequestMapping(value = "/v1/grounds/{groundState}/{groundDistrict}/{gameName}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)

@@ -13,21 +13,21 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * UserError
+ * KheloError
  */
 @Validated
 
-public class UserError   {
+public class KheloError   {
   @JsonProperty("errors")
   @Valid
   private List<ApplicationError> errors = null;
 
-  public UserError errors(List<ApplicationError> errors) {
+  public KheloError errors(List<ApplicationError> errors) {
     this.errors = errors;
     return this;
   }
 
-  public UserError addErrorsItem(ApplicationError errorsItem) {
+  public KheloError addErrorsItem(ApplicationError errorsItem) {
     if (this.errors == null) {
       this.errors = new ArrayList<>();
     }
@@ -60,8 +60,8 @@ public class UserError   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    UserError userError = (UserError) o;
-    return Objects.equals(this.errors, userError.errors);
+    KheloError kheloError = (KheloError) o;
+    return Objects.equals(this.errors, kheloError.errors);
   }
 
   @Override
@@ -72,7 +72,7 @@ public class UserError   {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class UserError {\n");
+    sb.append("class KheloError {\n");
     
     sb.append("    errors: ").append(toIndentedString(errors)).append("\n");
     sb.append("}");
