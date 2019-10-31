@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface GroundGameRepostitory extends JpaRepository<GroundEntity, Long> {
-    List<GroundEntity> findAllByGroundStateAndGroundDistrict(String stateName, String DistrictName);
+    List<GroundEntity> findAllByGroundStateAndGroundDistrictAndGameNameAndGroundActiveIsTrue(String stateName, String districtName, String gameName);
 
 }

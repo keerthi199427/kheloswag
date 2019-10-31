@@ -8,10 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -51,13 +56,13 @@ public class StateListService {
         ZonedDateTime creationTime = stateListEntity.getCreationTime();
         ZonedDateTime modificationTime = stateListEntity.getModificationTime();
 
-        state.setCreationTime(creationTime.toLocalDateTime().atZone(ZoneId.of("UTC")).toString());
-        state.setModificationTime(modificationTime.toLocalDateTime().atZone(ZoneId.of("UTC")).toString());
+        state.setCreationTime(creationTime.toLocalDateTime().atZone(ZoneId.of("IST")).toString());
+        state.setModificationTime(modificationTime.toLocalDateTime().atZone(ZoneId.of("IST")).toString());
 
         return state;
     }
 
-    public Districts getDistrictList(Long stateId) {
+    public Districts getDistrictListsByStateId(Long stateId) {
         Districts districts = new Districts();
         List<DistrictListEntity> districtListEntityList = districtListRepository.findByStateId(stateId);
         if(!CollectionUtils.isEmpty(districtListEntityList)) {
@@ -76,8 +81,8 @@ public class StateListService {
         ZonedDateTime creationTime = districtListEntity.getCreationTime();
         ZonedDateTime modificationTime = districtListEntity.getModificationTime();
 
-        district.setCreationTime(creationTime.toLocalDateTime().atZone(ZoneId.of("UTC")).toString());
-        district.setModificationTime(modificationTime.toLocalDateTime().atZone(ZoneId.of("UTC")).toString());
+        district.setCreationTime(creationTime.toLocalDateTime().atZone(ZoneId.of("IST")).toString());
+        district.setModificationTime(modificationTime.toLocalDateTime().atZone(ZoneId.of("IST")).toString());
 
         return district;
     }
@@ -108,9 +113,9 @@ public class StateListService {
             userEntity.setUserGender(userRequest.getUserGender());
             userEntity.setUserState(userRequest.getUserState());
             userEntity.setUserCreationTime(userRequest.getUserCreationTime() != null?
-                    getDateTimeInUTC(userRequest.getUserCreationTime()): null);
+                    getDateTimeInIST(userRequest.getUserCreationTime()): null);
             userEntity.setUserModificationTime(userRequest.getUserCreationTime() != null?
-                    getDateTimeInUTC(userRequest.getUserCreationTime()): null);
+                    getDateTimeInIST(userRequest.getUserCreationTime()): null);
         }
         return userEntity;
     }
@@ -146,10 +151,11 @@ public class StateListService {
             newBookingEntity.setGameName(newBookingRequest.getGameName());
             newBookingEntity.setGroundName(newBookingRequest.getGroundName());
             newBookingEntity.setStateName(newBookingRequest.getStateName());
-            newBookingEntity.setGameEndTime(newBookingRequest.getGameEndTime() != null?
-                    getDateTimeInUTC(newBookingRequest.getGameEndTime()): null);
-            newBookingEntity.setGameStartTime(newBookingRequest.getGameStartTime() != null?
-                    getDateTimeInUTC(newBookingRequest.getGameStartTime()): null);
+            newBookingEntity.setGameBookingDate(newBookingRequest.getGameBookingDate()!= null?
+                    getDateInIST(newBookingRequest.getGameBookingDate()): null);
+            newBookingEntity.setGameEndTime(newBookingRequest.getGameEndTime());
+            newBookingEntity.setGameStartTime(newBookingRequest.getGameStartTime());
+            newBookingEntity.setBookingActive(newBookingRequest.isBookingActive());
         }
         return  newBookingEntity;
     }
@@ -164,16 +170,35 @@ public class StateListService {
             newBookingResponse.setGameName(newBookingEntity.getGameName());
             newBookingResponse.setGroundName(newBookingEntity.getGroundName());
             newBookingResponse.setStateName(newBookingEntity.getStateName());
+            newBookingResponse.setGameBookingDate(newBookingEntity.getGameBookingDate()!= null? newBookingEntity.getGameBookingDate().toString(): "");
             newBookingResponse.setGameEndTime(newBookingEntity.getGameEndTime() !=null ? newBookingEntity.getGameEndTime().toString(): " ");
             newBookingResponse.setGameStartTime(newBookingEntity.getGameStartTime() !=null ? newBookingEntity.getGameStartTime().toString(): " ");
+            newBookingResponse.setBookingActive(newBookingEntity.isBookingActive());
         }
         return newBookingResponse;
     }
 
-    public ZonedDateTime getDateTimeInUTC(String inDateTime) {
+    public ZonedDateTime getDateTimeInIST(String inDateTime) {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         LocalDateTime localDateTime = LocalDateTime.parse(inDateTime,dateTimeFormatter);
-        return localDateTime.atZone(ZoneId.of("UTC"));
+        return localDateTime.atZone(ZoneId.of("IST"));
+    }
+
+    public Date getDateInIST(String inDateTime) {
+        Date date = null;
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            date = format.parse(inDateTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+
+    public ZonedDateTime getTimeInIST(String inDateTime) {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+        LocalDateTime localDateTime = LocalDateTime.parse(inDateTime,dateTimeFormatter);
+        return localDateTime.atZone(ZoneId.of("IST"));
     }
 
     public NewBookingList getBookingListForUserId(String userId) {
@@ -196,18 +221,18 @@ public class StateListService {
         newBookingResponse.setStateName(newBookingEntity.getStateName());
         newBookingResponse.setUserId(newBookingEntity.getUserId());
 
-        ZonedDateTime startTime = newBookingEntity.getGameStartTime();
-        ZonedDateTime endTime = newBookingEntity.getGameEndTime();
+        //ZonedDateTime startTime = newBookingEntity.getGameStartTime();
+        //ZonedDateTime endTime = newBookingEntity.getGameEndTime();
 
-        newBookingResponse.setGameStartTime(startTime.toLocalDateTime().atZone(ZoneId.of("UTC")).toString());
-        newBookingResponse.setGameEndTime(endTime.toLocalDateTime().atZone(ZoneId.of("UTC")).toString());
+        newBookingResponse.setGameStartTime(newBookingEntity.getGameStartTime());
+        newBookingResponse.setGameEndTime(newBookingEntity.getGameEndTime());
 
         return newBookingResponse;
     }
 
-    public Grounds getGroundsByStateNameAndDistrictName(String groundState, String groundDistrict) {
+    public Grounds getGroundsByStateNameAndDistrictNameAndGameName(String groundState, String groundDistrict, String gameName) {
         Grounds grounds = new Grounds();
-        List<GroundEntity> groundEntityList = groundGameRepostitory.findAllByGroundStateAndGroundDistrict(groundState,groundDistrict);
+        List<GroundEntity> groundEntityList = groundGameRepostitory.findAllByGroundStateAndGroundDistrictAndGameNameAndGroundActiveIsTrue(groundState,groundDistrict,gameName);
         if(!CollectionUtils.isEmpty(groundEntityList)) {
             List<Ground> groundsList = groundEntityList.stream().map(StateListService::buildGround).collect(Collectors.toList());
             grounds.setGroundsList(groundsList);
@@ -228,8 +253,8 @@ public class StateListService {
         ZonedDateTime creationTime = groundEntity.getGroundCreationTime();
         ZonedDateTime modificationTime = groundEntity.getGroundModificationTime();
 
-        ground.setGroundCreationTime(creationTime.toLocalDateTime().atZone(ZoneId.of("UTC")).toString());
-        ground.setGroundModificationTime(modificationTime.toLocalDateTime().atZone(ZoneId.of("UTC")).toString());
+        ground.setGroundCreationTime(creationTime.toLocalDateTime().atZone(ZoneId.of("IST")).toString());
+        ground.setGroundModificationTime(modificationTime.toLocalDateTime().atZone(ZoneId.of("IST")).toString());
         return ground;
     }
 }

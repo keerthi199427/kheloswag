@@ -118,8 +118,6 @@ public interface LocationApi {
         return getStatesList();
     }
 
-    ResponseEntity<Districts> getDistrictLists(Long stateId);
-
     // Override this method
     default ResponseEntity<States> getStatesList() {
         if(getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {

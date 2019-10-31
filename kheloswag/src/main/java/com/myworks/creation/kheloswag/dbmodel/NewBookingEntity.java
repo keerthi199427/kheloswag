@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name= "booking_list")
@@ -38,11 +39,35 @@ public class NewBookingEntity {
     @Column(name = "game_name")
     private String gameName;
 
-    @Column(name = "start_ts", nullable = false)
-    private ZonedDateTime gameStartTime;
+    @Column(name = "booking_date", nullable = false)
+    private Date gameBookingDate;
 
-    @Column(name = "end_ts" , nullable = false)
-    private ZonedDateTime gameEndTime;
+    @Column(name = "game_start_ts", nullable = false)
+    private String gameStartTime;
+
+    @Column(name = "game_end_ts" , nullable = false)
+    private String gameEndTime;
+
+    public Date getGameBookingDate() {
+        return gameBookingDate;
+    }
+
+    public void setGameBookingDate(Date gameBookingDate) {
+        this.gameBookingDate = gameBookingDate;
+    }
+
+    public boolean isBookingActive() {
+        return bookingActive;
+    }
+
+    public void setBookingActive(boolean bookingActive) {
+        this.bookingActive = bookingActive;
+    }
+
+    @Column(name="booking_active")
+    private boolean bookingActive;
+
+
 
     public String getBookingId() {
         return bookingId;
@@ -100,19 +125,19 @@ public class NewBookingEntity {
         this.gameName = gameName;
     }
 
-    public ZonedDateTime getGameStartTime() {
+    public String getGameStartTime() {
         return gameStartTime;
     }
 
-    public void setGameStartTime(ZonedDateTime gameStartTime) {
+    public void setGameStartTime(String gameStartTime) {
         this.gameStartTime = gameStartTime;
     }
 
-    public ZonedDateTime getGameEndTime() {
+    public String getGameEndTime() {
         return gameEndTime;
     }
 
-    public void setGameEndTime(ZonedDateTime gameEndTime) {
+    public void setGameEndTime(String gameEndTime) {
         this.gameEndTime = gameEndTime;
     }
 }

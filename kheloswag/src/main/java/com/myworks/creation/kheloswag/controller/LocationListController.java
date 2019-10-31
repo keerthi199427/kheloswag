@@ -19,8 +19,8 @@ public class LocationListController implements LocationApi {
     }
 
     @Override
-    public ResponseEntity<Districts> getDistrictLists(Long stateId) {
-        return new ResponseEntity<Districts>(stateListService.getDistrictList(stateId), HttpStatus.OK);
+    public ResponseEntity<Districts> getDistrictListsByStateId(Long stateId) {
+        return new ResponseEntity<Districts>(stateListService.getDistrictListsByStateId(stateId), HttpStatus.OK);
     }
 
     @Override

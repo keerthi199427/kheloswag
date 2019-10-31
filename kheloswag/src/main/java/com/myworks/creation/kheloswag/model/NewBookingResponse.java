@@ -36,11 +36,17 @@ public class NewBookingResponse   {
   @JsonProperty("gameName")
   private String gameName = null;
 
+  @JsonProperty("gameBookingDate")
+  private String gameBookingDate = null;
+
   @JsonProperty("gameStartTime")
   private String gameStartTime = null;
 
   @JsonProperty("gameEndTime")
   private String gameEndTime = null;
+
+  @JsonProperty("bookingActive")
+  private Boolean bookingActive = null;
 
   public NewBookingResponse bookingId(String bookingId) {
     this.bookingId = bookingId;
@@ -182,6 +188,26 @@ public class NewBookingResponse   {
     this.gameName = gameName;
   }
 
+  public NewBookingResponse gameBookingDate(String gameBookingDate) {
+    this.gameBookingDate = gameBookingDate;
+    return this;
+  }
+
+  /**
+   * Game Booking Date
+   * @return gameBookingDate
+  **/
+  @ApiModelProperty(example = "2019-10-31", value = "Game Booking Date")
+
+
+  public String getGameBookingDate() {
+    return gameBookingDate;
+  }
+
+  public void setGameBookingDate(String gameBookingDate) {
+    this.gameBookingDate = gameBookingDate;
+  }
+
   public NewBookingResponse gameStartTime(String gameStartTime) {
     this.gameStartTime = gameStartTime;
     return this;
@@ -191,7 +217,7 @@ public class NewBookingResponse   {
    * Get gameStartTime
    * @return gameStartTime
   **/
-  @ApiModelProperty(example = "2019-10-11", value = "")
+  @ApiModelProperty(example = "06:00, 10:00, 14:00, 18:00", value = "")
 
 
   public String getGameStartTime() {
@@ -211,7 +237,7 @@ public class NewBookingResponse   {
    * Get gameEndTime
    * @return gameEndTime
   **/
-  @ApiModelProperty(example = "2019-10-11", value = "")
+  @ApiModelProperty(example = "09:00, 13:00, 17:00, 21:00", value = "")
 
 
   public String getGameEndTime() {
@@ -220,6 +246,26 @@ public class NewBookingResponse   {
 
   public void setGameEndTime(String gameEndTime) {
     this.gameEndTime = gameEndTime;
+  }
+
+  public NewBookingResponse bookingActive(Boolean bookingActive) {
+    this.bookingActive = bookingActive;
+    return this;
+  }
+
+  /**
+   * Flag for Ground Booking Slot
+   * @return bookingActive
+  **/
+  @ApiModelProperty(example = "true", value = "Flag for Ground Booking Slot")
+
+
+  public Boolean isBookingActive() {
+    return bookingActive;
+  }
+
+  public void setBookingActive(Boolean bookingActive) {
+    this.bookingActive = bookingActive;
   }
 
 
@@ -239,13 +285,15 @@ public class NewBookingResponse   {
         Objects.equals(this.groundName, newBookingResponse.groundName) &&
         Objects.equals(this.gameId, newBookingResponse.gameId) &&
         Objects.equals(this.gameName, newBookingResponse.gameName) &&
+        Objects.equals(this.gameBookingDate, newBookingResponse.gameBookingDate) &&
         Objects.equals(this.gameStartTime, newBookingResponse.gameStartTime) &&
-        Objects.equals(this.gameEndTime, newBookingResponse.gameEndTime);
+        Objects.equals(this.gameEndTime, newBookingResponse.gameEndTime) &&
+        Objects.equals(this.bookingActive, newBookingResponse.bookingActive);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(bookingId, userId, stateName, districtName, groundName, gameId, gameName, gameStartTime, gameEndTime);
+    return Objects.hash(bookingId, userId, stateName, districtName, groundName, gameId, gameName, gameBookingDate, gameStartTime, gameEndTime, bookingActive);
   }
 
   @Override
@@ -260,8 +308,10 @@ public class NewBookingResponse   {
     sb.append("    groundName: ").append(toIndentedString(groundName)).append("\n");
     sb.append("    gameId: ").append(toIndentedString(gameId)).append("\n");
     sb.append("    gameName: ").append(toIndentedString(gameName)).append("\n");
+    sb.append("    gameBookingDate: ").append(toIndentedString(gameBookingDate)).append("\n");
     sb.append("    gameStartTime: ").append(toIndentedString(gameStartTime)).append("\n");
     sb.append("    gameEndTime: ").append(toIndentedString(gameEndTime)).append("\n");
+    sb.append("    bookingActive: ").append(toIndentedString(bookingActive)).append("\n");
     sb.append("}");
     return sb.toString();
   }

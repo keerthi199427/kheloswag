@@ -68,7 +68,7 @@ public interface BookingApi {
         if(getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
             if (getAcceptHeader().get().contains("application/json")) {
                 try {
-                    return new ResponseEntity<>(getObjectMapper().get().readValue("{  \"gameId\" : \"1\",  \"districtName\" : \"Chandigarh\",  \"gameName\" : \"Volley ball\",  \"stateName\" : \"Punjab\",  \"gameStartTime\" : \"2019-10-11\",  \"gameEndTime\" : \"2019-10-11\",  \"userId\" : \"123\",  \"bookingId\" : \"123\",  \"groundName\" : \"ZPH - Villur\"}", NewBookingResponse.class), HttpStatus.NOT_IMPLEMENTED);
+                    return new ResponseEntity<>(getObjectMapper().get().readValue("{  \"gameId\" : \"1\",  \"districtName\" : \"Chandigarh\",  \"gameName\" : \"Volley ball\",  \"stateName\" : \"Punjab\",  \"gameStartTime\" : \"06:00, 10:00, 14:00, 18:00\",  \"gameEndTime\" : \"09:00, 13:00, 17:00, 21:00\",  \"bookingActive\" : true,  \"userId\" : \"123\",  \"gameBookingDate\" : \"2019-10-31\",  \"bookingId\" : \"123\",  \"groundName\" : \"ZPH - Villur\"}", NewBookingResponse.class), HttpStatus.NOT_IMPLEMENTED);
                 } catch (IOException e) {
                     log.error("Couldn't serialize response for content type application/json", e);
                     return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -97,7 +97,7 @@ public interface BookingApi {
         if(getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
             if (getAcceptHeader().get().contains("application/json")) {
                 try {
-                    return new ResponseEntity<>(getObjectMapper().get().readValue("{  \"bookingsList\" : [ {    \"gameId\" : \"1\",    \"districtName\" : \"Chandigarh\",    \"gameName\" : \"Volley ball\",    \"stateName\" : \"Punjab\",    \"gameStartTime\" : \"2019-10-11\",    \"gameEndTime\" : \"2019-10-11\",    \"userId\" : \"123\",    \"bookingId\" : \"123\",    \"groundName\" : \"ZPH - Villur\"  }, {    \"gameId\" : \"1\",    \"districtName\" : \"Chandigarh\",    \"gameName\" : \"Volley ball\",    \"stateName\" : \"Punjab\",    \"gameStartTime\" : \"2019-10-11\",    \"gameEndTime\" : \"2019-10-11\",    \"userId\" : \"123\",    \"bookingId\" : \"123\",    \"groundName\" : \"ZPH - Villur\"  } ]}", NewBookingList.class), HttpStatus.NOT_IMPLEMENTED);
+                    return new ResponseEntity<>(getObjectMapper().get().readValue("{  \"bookingsList\" : [ {    \"gameId\" : \"1\",    \"districtName\" : \"Chandigarh\",    \"gameName\" : \"Volley ball\",    \"stateName\" : \"Punjab\",    \"gameStartTime\" : \"06:00, 10:00, 14:00, 18:00\",    \"gameEndTime\" : \"09:00, 13:00, 17:00, 21:00\",    \"bookingActive\" : true,    \"userId\" : \"123\",    \"gameBookingDate\" : \"2019-10-31\",    \"bookingId\" : \"123\",    \"groundName\" : \"ZPH - Villur\"  }, {    \"gameId\" : \"1\",    \"districtName\" : \"Chandigarh\",    \"gameName\" : \"Volley ball\",    \"stateName\" : \"Punjab\",    \"gameStartTime\" : \"06:00, 10:00, 14:00, 18:00\",    \"gameEndTime\" : \"09:00, 13:00, 17:00, 21:00\",    \"bookingActive\" : true,    \"userId\" : \"123\",    \"gameBookingDate\" : \"2019-10-31\",    \"bookingId\" : \"123\",    \"groundName\" : \"ZPH - Villur\"  } ]}", NewBookingList.class), HttpStatus.NOT_IMPLEMENTED);
                 } catch (IOException e) {
                     log.error("Couldn't serialize response for content type application/json", e);
                     return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

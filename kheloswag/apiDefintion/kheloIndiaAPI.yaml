@@ -19,7 +19,7 @@ tags:
   description: "Operations about user"
 - name: "booking"
   description: "Operations about Bookings"
-- name: "grounds & games"
+- name: "grounds and games"
   description: "Everything about available grounds & games"
 paths:
   /v1/users:
@@ -167,12 +167,12 @@ paths:
           description: successful operation
           schema:
             $ref: '#/definitions/BookingError'
-  /v1/grounds/{groundState}/{groundDistrict}:
+  /v1/grounds/{groundState}/{groundDistrict}/{gameName}:
     get:
       tags:
-        - "grounds & games"
-      summary: List of grounds for particular State and District
-      operationId: getGroundsByStateNameAndDistrictName
+        - "grounds and games"
+      summary: List of grounds for particular State, District and Game
+      operationId: getGroundsByStateNameAndDistrictNameAndGameName
       produces:
         - application/json
       parameters:
@@ -184,6 +184,11 @@ paths:
         - name: "groundDistrict"
           in: "path"
           description: "Name of ground district to return list of grounds"
+          required: true
+          type: "string"
+        - name: "gameName"
+          in: "path"
+          description: "Name of the game to return list of grounds"
           required: true
           type: "string"
       responses:
@@ -357,14 +362,22 @@ definitions:
       gameName:
         type: string
         example: 'Volley ball'
+      gameBookingDate:
+        type: string
+        description: 'Game Booking Date'
+        example: '2019-10-31'
       gameStartTime:
         type: string
         descrption: 'Game Start TimeStamp'
-        example: '2019-10-11'
+        example: '06:00, 10:00, 14:00, 18:00'
       gameEndTime:
         type: string
         descrption: 'Game End TimeStamp'
-        example: '2019-10-11'
+        example: '09:00, 13:00, 17:00, 21:00'
+      bookingActive:
+        type: boolean
+        description: 'Flag for Ground Booking Slot'
+        example: true
   NewBookingResponse:
     properties:
       bookingId:
@@ -388,14 +401,22 @@ definitions:
       gameName:
         type: string
         example: 'Volley ball'
+      gameBookingDate:
+        type: string
+        description: 'Game Booking Date'
+        example: '2019-10-31'
       gameStartTime:
         type: string
         descrption: 'Game Start TimeStamp'
-        example: '2019-10-11'
+        example: '06:00, 10:00, 14:00, 18:00'
       gameEndTime:
         type: string
         descrption: 'Game End TimeStamp'
-        example: '2019-10-11'
+        example: '09:00, 13:00, 17:00, 21:00'
+      bookingActive:
+        type: boolean
+        description: 'Flag for Ground Booking Slot'
+        example: true
   BookingError:
     properties:
       errors:
